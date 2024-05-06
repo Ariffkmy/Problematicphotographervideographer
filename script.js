@@ -57,11 +57,12 @@ function generateHantarAduanForm() {
          <label for="attachment">Lampiran (Jika ada):</label>
          <input type="file" class="form-control-file" id="attachment">
        </div>
-           <button type="button" class="btn btn-primary" id="submitBtn" data-toggle="modal" data-target="#myModal">Hantar</button>
            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo">Hantar</button>
          </div>
          <div id="userInfoContainer"></div>
        </div>
+       <br/>
+       <br/>
 
        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
@@ -80,18 +81,18 @@ function generateHantarAduanForm() {
           </div>
           <div class="form-group">
             <label for="recipient-name" class="col-form-label">Email:</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <input type="text" class="form-control" id="recipient-email">
           </div>
           <div class="form-group">
           <label for="recipient-name" class="col-form-label">Facebook:</label>
-          <input type="text" class="form-control" id="recipient-name">
+          <input type="text" class="form-control" id="recipient-fb">
         </div>
           
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-        <button type="button" class="btn btn-primary">Hantar Aduan</button>
+        <button type="button" class="btn btn-primary" id="submitModalBtn">Hantar Aduan</button>
       </div>
     </div>
   </div>
@@ -102,11 +103,7 @@ function generateHantarAduanForm() {
     // Add event listener to the "Hantar" button to show the modal
     var container = document.createElement('div');
     container.innerHTML = hantarAduanFormHTML;
-    var submitBtn = container.querySelector("#submitBtn");
-    var modal = document.getElementById("myModal");
-    submitBtn.addEventListener('click', function() {
-        modal.style.display = "block";
-    });
+   
 
     return container.innerHTML;
 }
@@ -224,7 +221,7 @@ function loadHantarAduanContent() {
 // Function to load the "Senarai Aduan" content
 function loadSenaraiAduanContent() {
     var dynamicContentContainer = document.getElementById("dynamicContentContainer");
-    dynamicContentContainer.innerHTML = "<h1>Welcome to Senarai Aduan</h1>";
+    dynamicContentContainer.innerHTML = "<h1>Senarai Aduan</h1>";
 
     // Add active class to "Senarai Aduan" link and remove from others
     document.getElementById("lamanUtamaLink").classList.remove("active");
@@ -258,6 +255,183 @@ document.getElementById("hantarAduanLink").addEventListener("click", function (e
 });
 
 
+// Function to load the "Hantar Aduan" content
+function loadHantarAduanContent() {
+    var dynamicContentContainer = document.getElementById("dynamicContentContainer");
+    dynamicContentContainer.innerHTML = generateHantarAduanForm();
+
+    // Add active class to "Hantar Aduan" link and remove from others
+    document.getElementById("lamanUtamaLink").classList.remove("active");
+    document.getElementById("hantarAduanLink").classList.add("active");
+    document.getElementById("senaraiAduanLink").classList.remove("active");
+
+    // Add event listener to the button after it's created
+    document.getElementById("submitModalBtn").addEventListener("click", function() {
+        // Capture the form data
+        console.log('Hantar Aduan is clicked');
+        var name = document.getElementById("name").value;
+        var company = document.getElementById("company").value;
+        var issue = document.getElementById("issue").value;
+        var instagram = document.getElementById("instagram").value;
+        var facebook = document.getElementById("facebook").value;
+        var phone = document.getElementById("phone").value;
+        var issueDescription = document.getElementById("note").value;
+        //var attachmentFile = document.getElementById("attachment").files[0];
+
+        // Store the captured data (you can store it in localStorage or any other method)
+        var aduanData = {
+            name: name,
+            company: company,
+            issue: issue,
+            instagram: instagram,
+            facebook: facebook,
+            phone: phone,
+            issueDescription: issueDescription
+            //attachment: attachmentFile
+        };
+
+        $('#exampleModal').modal('hide');
+
+        // Save the data to localStorage
+        localStorage.setItem('aduanData', JSON.stringify(aduanData));
+
+        // Load the "Senarai Aduan" content
+        loadSenaraiAduanContent();
+
+        // Display the stored data on the "Senarai Aduan" page
+        displayAduanData();
+    });
+}
+
+// Function to load the "Senarai Aduan" content
+function loadSenaraiAduanContent() {
+    var dynamicContentContainer = document.getElementById("dynamicContentContainer");
+    dynamicContentContainer.innerHTML = "<h1>Senarai Aduan</h1>";
+
+    // Add active class to "Senarai Aduan" link and remove from others
+    document.getElementById("lamanUtamaLink").classList.remove("active");
+    document.getElementById("hantarAduanLink").classList.remove("active");
+    document.getElementById("senaraiAduanLink").classList.add("active");
+}
+
+// Function to load the "Hantar Aduan" content
+function loadHantarAduanContent() {
+    var dynamicContentContainer = document.getElementById("dynamicContentContainer");
+    dynamicContentContainer.innerHTML = generateHantarAduanForm();
+
+    // Add active class to "Hantar Aduan" link and remove from others
+    document.getElementById("lamanUtamaLink").classList.remove("active");
+    document.getElementById("hantarAduanLink").classList.add("active");
+    document.getElementById("senaraiAduanLink").classList.remove("active");
+
+    // Add event listener to the button after it's created
+    document.getElementById("submitModalBtn").addEventListener("click", function() {
+        // Capture the form data
+        var name = document.getElementById("name").value;
+        var company = document.getElementById("company").value;
+        var issue = document.getElementById("issue").value;
+        var instagram = document.getElementById("instagram").value;
+        var facebook = document.getElementById("facebook").value;
+        var phone = document.getElementById("phone").value;
+        var issueDescription = document.getElementById("note").value;
+        //var attachmentFile = document.getElementById("attachment").files[0];
+
+        // Store the captured data (you can store it in localStorage or any other method)
+        var aduanData = {
+            name: name,
+            company: company,
+            issue: issue,
+            instagram: instagram,
+            facebook: facebook,
+            phone: phone,
+            issueDescription: issueDescription
+            //attachment: attachmentFile
+        };
+
+        // Capture the reporter's information
+        var reporterName = document.getElementById("recipient-name").value;
+        var reporterEmail = document.getElementById("recipient-email").value;
+        var reporterFacebook = document.getElementById("recipient-fb").value;
+
+        // Store the reporter's information
+        var reporterInfo = {
+            name: reporterName,
+            email: reporterEmail,
+            facebook: reporterFacebook
+        };
+
+        // Combine aduan data and reporter info
+        var combinedData = {
+            aduanData: aduanData,
+            reporterInfo: reporterInfo
+        };
+
+        // Save the data to localStorage
+        localStorage.setItem('aduanData', JSON.stringify(combinedData));
+        
+
+        // Load the "Senarai Aduan" content
+        loadSenaraiAduanContent();
+
+        // Display the stored data on the "Senarai Aduan" page
+        displayAduanData();
+    });
+}
+
+// Function to display the stored data on the "Senarai Aduan" page
+function displayAduanData() {
+    // Retrieve the stored data from localStorage
+    var combinedData = JSON.parse(localStorage.getItem('aduanData'));
+    console.log('Display aduan data function displayaduandata');
+
+    // Check if there's any data
+    if (combinedData) {
+        // Display the data on the "Senarai Aduan" page
+        var dynamicContentContainer = document.getElementById("dynamicContentContainer");
+        dynamicContentContainer.innerHTML += `
+            
+            </br>
+            </br>
+            <h2>Aduan</h2>
+            <p>Nama: ${combinedData.aduanData.name}</p>
+            <p>Nama Syarikat: ${combinedData.aduanData.company}</p>
+            <p>Tugasan: ${combinedData.aduanData.issue}</p>
+            <p>Instagram: ${combinedData.aduanData.instagram}</p>
+            <p>Facebook: ${combinedData.aduanData.facebook}</p>
+            <p>No Telefon: ${combinedData.aduanData.phone}</p>
+            <p>Isu: ${combinedData.aduanData.issueDescription}</p>
+            <p>Aduan di hantar oleh: ${combinedData.reporterInfo.name}</p>
+            <p>Email pengadu: ${combinedData.reporterInfo.email}</p>
+            <p>Facebook pengadu: ${combinedData.reporterInfo.facebook}</p>
+            <p>Lampiran: ${combinedData.aduanData.attachmentFile}</p>
+        `;
+    }
+}
+
+
+
+
+// Add event listeners to navigation links
+document.getElementById("lamanUtamaLink").addEventListener("click", function (event) {
+    event.preventDefault();
+    loadLamanUtamaContent();
+});
+
+document.getElementById("hantarAduanLink").addEventListener("click", function (event) {
+    event.preventDefault();
+    loadHantarAduanContent();
+});
+
+document.getElementById("senaraiAduanLink").addEventListener("click", function (event) {
+    event.preventDefault();
+    loadSenaraiAduanContent();
+});
+
+// Initially load the "Laman Utama" content
+loadLamanUtamaContent();
+
+
+
 $('#exampleModal').on('show.bs.modal', function (event) {
     var button = $(event.relatedTarget) // Button that triggered the modal
     var recipient = button.data('whatever') // Extract info from data-* attributes
@@ -267,3 +441,4 @@ $('#exampleModal').on('show.bs.modal', function (event) {
     modal.find('.modal-title').text('New message to ' + recipient)
     modal.find('.modal-body input').val(recipient)
   })
+
